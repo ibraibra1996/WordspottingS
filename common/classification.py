@@ -113,7 +113,7 @@ class KNNClassifier(object):
         Bag = BagOfWords(list_copy_train_labels)
         listreturn = []
         for i in list_test_labels:
-            listreturn.append(Bag.most_freq_words(i,1))
+            listreturn.append(Bag.most_freq_words(i))
             
         
         return np.asarray(listreturn)
