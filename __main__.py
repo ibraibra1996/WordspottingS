@@ -12,21 +12,26 @@ def main():
 
     s1 = segmentation.Segmentation()
 
-
     #_, _, files = next(os.walk("C:\Users\Luca\IdeaProjects\WordspottingS\GT"))
     gtpfiles = os.listdir(r"\Users\Luca\IdeaProjects\WordspottingS\GT")
     pngfiles = os.listdir(r"C:\Users\Luca\IdeaProjects\WordspottingS\pages")
     nrOfItems = len(gtpfiles)
 
+    #later used for calculation of average
+    totalWordImages = 0
+
     ''' segmentiere Bilder 
     #listOfSegmentedImages beinhaltet geordnet nach Dokument tupel mit je einem segmentierten Wort + repräsentiertem Wort
     '''
+
     for i in range (nrOfItems):
-        gtpPath = r"\Users\Luca\IdeaProjects\WordspottingS\GT\\" +   gtpfiles[i]
+        gtpPath = r"\Users\Luca\IdeaProjects\WordspottingS\GT\\" + gtpfiles[i]
         pngPath = r"\Users\Luca\IdeaProjects\WordspottingS\pages\\" + pngfiles[i]
 
         pngImage = Image.open(pngPath,"r")
-        listOfSegmentedImages.append(s1.segmentCut(pngImage,gtpPath))
+        segmentList = s1.segmentCut(pngImage,gtpPath)
+        listOfSegmentedImages.append(segmentList)
+        totalWordImages += len(segmentList)
 
     '''
     hier können BoF Repräsentationen generiert werden
@@ -36,14 +41,11 @@ def main():
     hier wird jedes Wortbild als Eingabe ausgewählt, um anhand der BoFs ähnliche Worte zu identifizieren
     '''
 
-
-
     '''
     Berechnung der Mean Average Precision
     '''
 
-
-    print(nrOfItems)
+    print(totalWordImages)
 
 
 if __name__ == "__main__":

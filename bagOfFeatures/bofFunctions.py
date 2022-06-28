@@ -16,7 +16,6 @@ import PIL.Image as Image
 import numpy as np
 
 class ImagePrep(object):
-
    
     def getFilterMatrix():
         a1 = np.array([-1,0,1]) #Zeilen-Vektor

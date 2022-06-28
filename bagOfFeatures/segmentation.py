@@ -25,3 +25,17 @@ class Segmentation(object):
             listOfWordPics.append((word,content))
 
         return listOfWordPics
+
+    @staticmethod
+    def averagePrecision(binlist):
+        sum=0
+        numberOfOnes=0
+        for i in range(len(binlist)):
+            if binlist[i]==1:
+                numberOfOnes+=1
+                sum+=numberOfOnes/(i+1)
+
+        return sum/numberOfOnes
+
+
+
