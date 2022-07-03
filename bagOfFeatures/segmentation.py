@@ -10,7 +10,6 @@ class Segmentation(object):
     def segmentCut(text, segments):
         segmentFile=open(segments, 'r')
 
-
         lines = segmentFile.readlines()
         listOfWordPics = list()
 
