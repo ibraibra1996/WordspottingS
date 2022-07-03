@@ -33,8 +33,15 @@ class Segmentation(object):
             if binlist[i]==1:
                 numberOfOnes+=1
                 sum+=numberOfOnes/(i+1)
+        ret = sum/numberOfOnes
+        '''
+        if(ret < 0.4):
+            print(binlist)
+            print(ret)
+        '''
 
-        return sum/numberOfOnes
+
+        return ret
 
 
 

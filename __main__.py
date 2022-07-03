@@ -15,8 +15,8 @@ def main():
     s1 = segmentation.Segmentation()
 
     # _, _, files = next(os.walk("C:\Users\Luca\IdeaProjects\WordspottingS\GT"))
-    gtpfiles = os.listdir(r"C:\Users\Ibrahim\OneDrive\Desktop\UNI\sopra\project_gw\WordspottingS\GT")
-    pngfiles = os.listdir(r"C:\Users\Ibrahim\OneDrive\Desktop\UNI\sopra\project_gw\WordspottingS\pages")
+    gtpfiles = os.listdir(r"\Users\Luca\IdeaProjects\WordspottingS\GT")
+    pngfiles = os.listdir(r"\Users\Luca\IdeaProjects\WordspottingS\pages")
     nrOfItems = len(gtpfiles)
 
     # later used for calculation of average
@@ -27,29 +27,33 @@ def main():
     '''
 
     for i in range(nrOfItems):
-        gtpPath = r"C:\Users\Ibrahim\OneDrive\Desktop\UNI\sopra\project_gw\WordspottingS\GT\\" + gtpfiles[i]
-        pngPath = r"C:\Users\Ibrahim\OneDrive\Desktop\UNI\sopra\project_gw\WordspottingS\pages\\" + pngfiles[i]
+        gtpPath = r"\Users\Luca\IdeaProjects\WordspottingS\GT\\" + gtpfiles[i]
+        pngPath = r"\Users\Luca\IdeaProjects\WordspottingS\pages\\" + pngfiles[i]
 
         pngImage = Image.open(pngPath, "r")
         segmentList = s1.segmentCut(pngImage, gtpPath)
         listOfSegmentedImages.append(segmentList)
         totalWordImages += len(segmentList)
 
+    listOfAllWords = [inner for outer in listOfSegmentedImages for inner in outer]
+    print(len(listOfAllWords))
+    #print(listOfAllWords)
     '''
     hier können BoF Repräsentationen generiert werden
-    
     '''
-    documentSegmentation = os.path.join('GT', '2700270.gtp')
-    documentImage = os.path.join('pages', '2700270.png')
+    documentSegmentation = os.path.join('GT', '3010301.gtp')
+    documentImage = os.path.join('pages', '3010301.png')
     image = Image.open(documentImage)
 
     wordImageList = segmentation.Segmentation.segmentCut(image, documentSegmentation)
+    print(wordImageList)
 
     # plt.figure()
 
     # wordImageList[0][0].show()
 
     histograms, namesOfWords = ImagePrep.bof(wordImageList=wordImageList)
+    #histograms, namesOfWords = ImagePrep.bof(wordImageList=listOfAllWords)
 
     precisionForAllWords = []
 
@@ -63,14 +67,19 @@ def main():
     '''
     hier wird jedes Wortbild als Eingabe ausgewählt, um anhand der BoFs ähnliche Worte zu identifizieren
     '''
-    av = segmentation.Segmentation.averagePrecision(binlist=precisionForAllWords[4])
-
+    #av = segmentation.Segmentation.averagePrecision(binlist=precisionForAllWords[4])
+    print(len(precisionForAllWords))
+    print(precisionForAllWords[4])
     '''
     Berechnung der Mean Average Precision
     '''
+    totalAvg = 0
+    for n in precisionForAllWords:
+        totalAvg += segmentation.Segmentation.averagePrecision(binlist=n)
 
-    print(av)
-    print(precisionForAllWords)
+    totalAvg = totalAvg/len(precisionForAllWords)
+
+    print(totalAvg)
 
 if __name__ == "__main__":
     main()
