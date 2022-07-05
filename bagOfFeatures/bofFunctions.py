@@ -54,7 +54,7 @@ class ImagePrep(object):
 
         EntriesWith01 = np.where(namesOfwordsSorted == queryWordString, 1, 0)
 
-        return EntriesWith01
+        return EntriesWith01[1:]
 
 
 """
