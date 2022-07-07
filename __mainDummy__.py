@@ -10,81 +10,54 @@ from bagOfFeatures.bofFunctions import ImagePrep
 from common import features
 
 
-def main():
-    listOfSegmentedImages = list()
-    listOfGTPs = list()
+def main(dataNames,
+         step_size,
+         cell_size,
+         n_centroids,
+         step_size_doc,
+         cell_size_doc,
+         iter):
+    totalAvgAllDocs = 0
+    for dataName in dataNames:
+        histograms, namesOfWords = ImagePrep.bof(documentSegmentation=dataName + '.gtp',
+                                                 documentImage=dataName + '.png',
+                                                 step_size=step_size,
+                                                 cell_size=cell_size,
+                                                 step_size_doc=step_size_doc,
+                                                 cell_size_doc=cell_size_doc,
+                                                 n_centroids=n_centroids,
+                                                 iter=iter)
+        precisionForAllWords = []
 
-    '''
-    hier können BoF Repräsentationen generiert werden
-    '''
-    documentSegmentation = os.path.join('GT', '2700270.gtp')
-    documentImage = os.path.join('pages', '2700270.png')
-    image = Image.open(documentImage)
+        for i in range(len(namesOfWords)):
+            precision = ImagePrep.resultListForPrecision(histograms=histograms,
+                                                         namesOfWords=namesOfWords,
+                                                         queryIndex=i)
+            precisionForAllWords.append(precision)
 
-    imageArray = np.array(image)
-
-    #histogramDocument = ImagePrep.bof([(image, "2700270")], n_centroids=20)
-    #print(histogramDocument)
-
-    #image = np.array(word[0])
-    step_size = 15
-    cell_size = 3
-    n_centroids=20
-    iter=20
-    frames, desc = features.compute_sift_descriptors(imageArray, step_size=step_size, cell_size=cell_size)
-    # clustering of SIFT descriptors
-    centroid, labels = kmeans2(desc, n_centroids, iter=iter, minit='points')
-    print(f"centroid {len(centroid[0])}")
-
-    wordImageList = segmentation.Segmentation.segmentCut(image, documentSegmentation)
-    #print(wordImageList)
-
-
-    frameList = []
-    descList = []
-    for word in wordImageList:
-        image = np.array(word[0])
-        frames, desc = features.compute_sift_descriptors(image, step_size=step_size, cell_size=cell_size)
-        frameList.append(frames)
-        descList.append(desc)
-
-    centroid, labels = kmeans2(descList[0], n_centroids, iter=iter, minit='points')
-    print(len(descList[0]))
-    # plt.figure()
-
-    # wordImageList[0][0].show()
-
-    # histograms, namesOfWords = ImagePrep.bof(wordImageList=wordImageList)
-    # histograms, namesOfWords = ImagePrep.bof(wordImageList=listOfAllWords)
-
-    precisionForAllWords = []
-    '''
-    
-    for i in range(len(namesOfWords)):
-        precision = ImagePrep.resultListForPrecision(histograms=histograms,
-                                                     namesOfwords=namesOfWords,
-                                                     queryWordHistogram=histograms[i],
-                                                     queryWordString=namesOfWords[i])
-        precisionForAllWords.append(precision)
-    '''
-    '''
-    hier wird jedes Wortbild als Eingabe ausgewählt, um anhand der BoFs ähnliche Worte zu identifizieren
-    '''
-    # av = segmentation.Segmentation.averagePrecision(binlist=precisionForAllWords[4])
-    #print(len(precisionForAllWords))
-    #print(precisionForAllWords[4])
-    '''
-    Berechnung der Mean Average Precision
         totalAvg = 0
-    for n in precisionForAllWords:
-        totalAvg += segmentation.Segmentation.averagePrecision(binlist=n)
+        for n in precisionForAllWords:
+            totalAvg += segmentation.Segmentation.averagePrecision(binlist=n)
 
-    totalAvg = totalAvg/len(precisionForAllWords)
+        totalAvg = totalAvg / len(precisionForAllWords)
 
-    print(totalAvg)
-    
-    '''
+        print(f'totalAvg für {dataName}:{totalAvg}')
+        totalAvgAllDocs += totalAvg
+
+    # print(f'totalAvgAllDocs:{totalAvgAllDocs / len(dataNames)}')
 
 
 if __name__ == "__main__":
-    main()
+    dataNames = [str(name) + "0" + str(name) for name in range(270, 280)] + [str(name) + "0" + str(name) for name in
+                                                                             range(300, 310)]
+    n_centroidsList = [i for i in range(25, 500, 25)]
+    main(dataNames=dataNames,
+         step_size=2,
+         cell_size=3,
+         step_size_doc=15,
+         cell_size_doc=3,
+         n_centroids=250,
+         iter=20)
+    #for n_centroids in n_centroidsList:
+    #    print(f'n_centroids:{n_centroids}')
+
