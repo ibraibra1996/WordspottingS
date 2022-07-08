@@ -11,9 +11,8 @@ class Segmentation(object):
     def segmentCut(text, segments):
         segmentFile = open(segments, 'r')
 
-        lines = segmentFile.readlines()
+        lines = segmentFile.read().splitlines()
         listOfWordPics = list()
-
         for line in lines:
             left0, top0, right0, bottom0, content = line.split(" ")
             left = int(left0)
