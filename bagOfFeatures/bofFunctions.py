@@ -67,8 +67,17 @@ class ImagePrep(object):
 
             sortiert2d = np.argsort(distances, axis=1)
 
-            hist = np.bincount(sortiert2d[:, 0], minlength=len(centroids))
+            globa1 = sortiert2d[:, 0]
+            histGlobal1 = np.bincount(globa1, minlength=len(centroids))
 
+            left = globa1[:int(len(globa1) / 2)]
+            histLeft = np.bincount(left, minlength=len(centroids) )
+
+            right = globa1[int(len(globa1) / 2):]
+            histRight = np.bincount(right, minlength=len(centroids) )
+
+
+            hist = np.concatenate((histLeft,histGlobal1,histRight))
             histograms.append(hist)
 
             namesOfWords.append(word[1])
@@ -149,3 +158,16 @@ class ImagePrep(object):
         EntriesWith01 = np.where(namesOfwordsSorted == queryWordString, 1, 0)
 
         return EntriesWith01[1:]
+
+    @staticmethod
+    def resultListForPrecisionForAllWords(histograms, namesOfWords):
+
+        distances = ds.cdist(histograms, histograms, metric='euclidean')
+
+        sortiert2d = np.argsort(distances, axis=1)
+
+        namesOfwordsSorted = np.array(namesOfWords)[sortiert2d]
+
+        EntriesWith01 = np.where(namesOfwordsSorted.T == namesOfWords, 1, 0).T
+
+        return EntriesWith01[:, 1:]

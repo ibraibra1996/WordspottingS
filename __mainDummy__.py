@@ -17,7 +17,10 @@ def main(dataNames,
          step_size_doc,
          cell_size_doc,
          iter):
+
+
     totalAvgAllDocs = 0
+
     for dataName in dataNames:
         histograms, namesOfWords = ImagePrep.bof(documentSegmentation=dataName + '.gtp',
                                                  documentImage=dataName + '.png',
@@ -27,13 +30,13 @@ def main(dataNames,
                                                  cell_size_doc=cell_size_doc,
                                                  n_centroids=n_centroids,
                                                  iter=iter)
-        precisionForAllWords = []
 
-        for i in range(len(namesOfWords)):
-            precision = ImagePrep.resultListForPrecision(histograms=histograms,
-                                                         namesOfWords=namesOfWords,
-                                                         queryIndex=i)
-            precisionForAllWords.append(precision)
+        precisionForAllWords = ImagePrep.resultListForPrecisionForAllWords(histograms=histograms,
+                                                                           namesOfWords=namesOfWords)
+
+
+        print(precisionForAllWords[1])
+
 
         totalAvg = 0
         for n in precisionForAllWords:
@@ -44,20 +47,20 @@ def main(dataNames,
         print(f'totalAvg für {dataName}:{totalAvg}')
         totalAvgAllDocs += totalAvg
 
-    # print(f'totalAvgAllDocs:{totalAvgAllDocs / len(dataNames)}')
+    print(f'totalAvgAllDocs:{totalAvgAllDocs / len(dataNames)}')
+    print('_____________')
 
 
 if __name__ == "__main__":
     dataNames = [str(name) + "0" + str(name) for name in range(270, 280)] + [str(name) + "0" + str(name) for name in
                                                                              range(300, 310)]
     n_centroidsList = [i for i in range(25, 500, 25)]
-    main(dataNames=dataNames,
-         step_size=2,
+    main(dataNames=dataNames[10:11],
+         step_size=2,  #2
          cell_size=3,
          step_size_doc=15,
          cell_size_doc=3,
-         n_centroids=250,
+         n_centroids=250, #250
          iter=20)
-    #for n_centroids in n_centroidsList:
+    # for n_centroids in n_centroidsList:
     #    print(f'n_centroids:{n_centroids}')
-
