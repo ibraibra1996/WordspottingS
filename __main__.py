@@ -10,6 +10,23 @@ def main():
     print('Summary:')
     print(df_pie[['n_centroids','step_size','cell_size','totalAvg']].describe())
 
+
+
+
+    print(' \nBedingt')
+    print(df_pie[['totalAvg','n_centroids']].groupby("n_centroids").mean())
+
+    print('\nBedingt ')
+    print(df_pie[['totalAvg','step_size']].groupby("step_size").mean())
+
+    print('\nBedingt ')
+    print(df_pie[['totalAvg','cell_size']].groupby("cell_size").mean())
+
+
+    print('\nBedingt ')
+    print(df_pie[['totalAvg','dataName']].groupby("dataName").mean())
+
+
     print('\n')
     print('Correlation:')
     rho, pval=spearmanr(df_pie['totalAvg'],df_pie[['n_centroids','step_size','cell_size']])

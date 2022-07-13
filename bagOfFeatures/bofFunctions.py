@@ -36,7 +36,8 @@ class ImagePrep(object):
             step_size_doc=15,
             cell_size_doc=3,
             n_centroids=250,
-            iter=20):
+            iter=20,
+            pyramide=True):
 
         documentSegmentation = os.path.join('GT', documentSegmentation)
         documentImage = os.path.join('pages', documentImage)
@@ -70,15 +71,17 @@ class ImagePrep(object):
             globa1 = sortiert2d[:, 0]
             histGlobal1 = np.bincount(globa1, minlength=len(centroids))
 
-            left = globa1[:int(len(globa1) / 2)]
-            histLeft = np.bincount(left, minlength=len(centroids) )
+            if pyramide:
+                left = globa1[:int(len(globa1) / 2)]
+                histLeft = np.bincount(left, minlength=len(centroids) )
 
-            right = globa1[int(len(globa1) / 2):]
-            histRight = np.bincount(right, minlength=len(centroids) )
+                right = globa1[int(len(globa1) / 2):]
+                histRight = np.bincount(right, minlength=len(centroids) )
+                hist = np.concatenate((histLeft,histGlobal1,histRight))
+                histograms.append(hist)
 
-
-            hist = np.concatenate((histLeft,histGlobal1,histRight))
-            histograms.append(hist)
+            else:
+                histograms.append(histGlobal1)
 
             namesOfWords.append(word[1])
 

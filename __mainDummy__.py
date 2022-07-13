@@ -63,7 +63,7 @@ if __name__ == "__main__":
     configurationList = [n_centroidsList,
                          step_sizeList,
                          cell_sizeList,
-                         dataNames]
+                         dataNames[:2]]
 
     configurationListProduct = []
     configurationListProduct.append(['n_centroids','step_size','cell_size','totalAvg','dataName'])
@@ -81,6 +81,6 @@ if __name__ == "__main__":
 
     import numpy as np
 
-    np.savetxt("ResultData.csv", configurationListProduct, delimiter=";", fmt='% s')
+    np.savetxt("ResultDataWithoutPyra.csv", configurationListProduct, delimiter=";", fmt='% s')
 
     print('csv fertig')
